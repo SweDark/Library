@@ -1,0 +1,76 @@
+﻿@model Library.MVC.Models.ReturnLoanVm;
+
+@{
+    ViewData["Title"] = "Loan";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Loan</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.LoanDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.LoanDate)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.member)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.member.Name)
+        </dd>
+        <dt class="col-sm-2">
+        <p>Book-id</p>
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.bookCopy.Id)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.bookCopy.Details.Title)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.bookCopy.Details.Title)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.bookCopy.Details.Author)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.bookCopy.Details.Author.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.bookCopy.Details.ISBN)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.bookCopy.Details.ISBN)
+        </dd>
+
+        @if (((TimeSpan)(Model.CurrentDate - Model.LoanDate)).Days > 14)
+        {
+            <dt class="col-sm-2">
+                <p class="text-danger">Debt:</p>
+            </dt>
+            <dd class="col-sm-10">
+                <p>@((((TimeSpan)(Model.CurrentDate - Model.LoanDate)).Days - 14)* 12) SEK</p>
+            </dd>
+        }
+    </dl>
+</div>
+
+<form asp-action="UpdateLoanStatus">
+    <div class="form-group">
+        <input type="submit" value="Return book" class="btn btn-outline-warning" />
+        <a asp-action="Index">Back to List</a>
+    </div>
+    <input type="hidden" name="MemberId" value="@Model.member.Id" />
+    <input type="hidden" name="Id" value="@Model.Id"/>
+    <input type="hidden" name="BookCopyId" value="@Model.bookCopy.Id" />
+    <input type="hidden" name="LoanDate" value="@Model.LoanDate" />
+
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,69 @@
+﻿@model Library.MVC.Models.BookIndexVm;
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a> | <a asp-action="Available">Available Books </a>
+</p>
+@if (!string.IsNullOrEmpty(Model.Ex))
+{
+    <p class="alert-danger">@Model.Ex</p>
+
+}
+<form asp-controller="Books" asp-action="Index">
+    <p>
+        Title: <input type="text" name="SearchString">
+        <input type="submit" value="Filter" />
+    </p>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ISBN</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Copies</th>
+            <th>Description</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model.Books)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ISBN)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @*.../authors/Details*@
+                    <a asp-controller="Authors" asp-action="Details" asp-route-id="@item.AuthorID">@Html.DisplayFor(modelItem => item.Author.Name)</a>
+
+                </td>
+                <td class="text-center">
+
+                    <a asp-action="RemoveCopy" asp-route-id="@item.ID">-</a>
+                    @Html.DisplayFor(modelItem => item.Copies.Count)
+                    <a asp-action="AddCopy" asp-route-id="@item.ID">+</a>
+
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

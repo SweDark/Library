@@ -1,0 +1,63 @@
+﻿@model Library.MVC.Models.LoanCurrentVm;
+
+@{
+    ViewData["Title"] = "Current";
+}
+
+<h1>Current loans</h1>
+
+<p>
+    <a asp-action="Create">Create New</a> | <a asp-action="Index">All loans</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Loan date</th>
+            <th>Book title</th>
+            <th>Member</th>
+            <th>Return date</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Loans)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.LoanDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.bookCopy.Details.Title)
+            </td>
+            <td>
+                <a asp-controller="Members" asp-action="Details" asp-route-id="@item.MemberId">@Html.DisplayFor(modelItem => item.member.Name)</a>
+            </td>
+            <td>
+                @if (item.Returned == false)
+                {
+                    int loandays = ((TimeSpan)(Model.CurrentDate - item.LoanDate)).Days;
+                    if (loandays > 14)
+                    {
+                        <p class="text-danger">Not yet returned - Overdue</p>
+
+                    }
+                    else
+                    {
+                        <p class="text-warning">Not yet Returned</p>
+                    }
+
+                }
+            </td>
+            <td>
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                
+                 @if (item.Returned == false)
+                 {
+                    
+                   <a asp-action="UpdateLoanStatus" asp-route-id="@item.Id"> Return Loan </a>
+                 }
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
